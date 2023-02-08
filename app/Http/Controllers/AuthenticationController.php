@@ -48,8 +48,7 @@ class AuthenticationController extends Controller
             'email' => $request->email,
             'password' => bcrypt($request->password),
         ]);
-    
-    }
+            }
 
     public function profile(Request $request)
     {
