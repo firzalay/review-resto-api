@@ -28,7 +28,7 @@ class AuthenticationTest extends TestCase
             'device_name' => 'testing',
         ];
 
-        $this->postJson(route('auth.login'), $data)
+        $this->postJson(route('login'), $data)
             ->assertOk()
             ->assertJsonStructure(['access_token', 'user']);
     }

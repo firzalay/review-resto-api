@@ -25,22 +25,30 @@ class StoreRestoRequest extends FormRequest
     public function rules()
     {
         return [
-            'name' => [
-                'required',
-                'string',
-                'max:255',
-                Rule::unique('restos', 'name'),
-            ],
-            'description' => [
-                'nullable',
-                'string',
-                'max:750'
-            ],
-            'address' => [
-                'string',
-                'required',
-                'max:750'
-            ] 
+ 
+                'name' => [
+                    'required',
+                    'string',
+                    'max:255',
+                    Rule::unique('restos', 'name'),
+                ],
+                'image' => [
+                    'nullable',
+                    'image',
+                    'mimes:jpeg,png,jpg',
+                    'max:2048'
+                ],
+                'description' => [
+                    'nullable',
+                    'string',
+                    'max:750'
+                ],
+                'address' => [
+                    'string',
+                    'required',
+                    'max:750'
+                ] 
+            
         ];
     }
 }

@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Resto;
 use Illuminate\Http\Request;
+use Illuminate\Validation\Rule;
 use App\Http\Requests\StoreRestoRequest;
 use App\Http\Requests\UpdateRestoRequest;
 
@@ -15,14 +16,15 @@ class RestoController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-   
+
 
     public function index()
     {
         return Resto::all();
     }
 
-    public function show(Resto $resto) {
+    public function show(Resto $resto)
+    {
         return $resto;
     }
 
@@ -32,11 +34,38 @@ class RestoController extends Controller
      * @param  \App\Http\Requests\StoreRestoRequest  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(StoreRestoRequest $request)
+    public function store(Request $request)
     {
-        return Resto::create(
-          $request->validated()
-        );
+        $validatedData = $request->validate([
+            'name' => [
+                'required',
+                'string',
+                'max:255',
+                Rule::unique('restos', 'name'),
+            ],
+            'description' => [
+                'nullable',
+                'string',
+                'max:750'
+            ],
+            'image' => [
+                'nullable',
+                'image',
+                'mimes:jpeg,png,jpg',
+                'max:2048'
+            ],
+            'address' => [
+                'string',
+                'required',
+                'max:750'
+            ],
+        ]);
+
+        if ($request->file('image')) {
+            $validatedData['image'] = $request->file('image')->store('resto-image');
+        }
+
+        Resto::create($validatedData);
     }
 
     /**
@@ -49,7 +78,7 @@ class RestoController extends Controller
     public function update(UpdateRestoRequest $request, Resto $resto)
     {
         $resto->update($request->validated());
-        
+
         return $resto->refresh();
     }
 
@@ -64,7 +93,6 @@ class RestoController extends Controller
         $resto->delete();
 
         return $resto;
-
     }
 
     public function reviews(Resto $resto)

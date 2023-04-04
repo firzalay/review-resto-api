@@ -14,6 +14,7 @@ class Resto extends Model
     protected $fillable = [
        
         'name',
+        'image',
         'address',
         'description'
     ];
