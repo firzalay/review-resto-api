@@ -20,7 +20,7 @@ class RestoController extends Controller
 
     public function index()
     {
-        return Resto::all();
+        return Resto::latest()->get();
     }
 
     public function show(Resto $resto)
@@ -34,38 +34,15 @@ class RestoController extends Controller
      * @param  \App\Http\Requests\StoreRestoRequest  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(StoreRestoRequest $request)
     {
-        $validatedData = $request->validate([
-            'name' => [
-                'required',
-                'string',
-                'max:255',
-                Rule::unique('restos', 'name'),
-            ],
-            'description' => [
-                'nullable',
-                'string',
-                'max:750'
-            ],
-            'image' => [
-                'nullable',
-                'image',
-                'mimes:jpeg,png,jpg',
-                'max:2048'
-            ],
-            'address' => [
-                'string',
-                'required',
-                'max:750'
-            ],
-        ]);
+        
+        $validatedData = $request->validated();
+        $validatedData['image'] = $request->file('image')->store('resto-image','public');
+        $data = Resto::create($validatedData);
 
-        if ($request->file('image')) {
-            $validatedData['image'] = $request->file('image')->store('resto-image');
-        }
-
-        Resto::create($validatedData);
+        return response($data);
+      
     }
 
     /**
