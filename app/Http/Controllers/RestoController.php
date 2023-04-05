@@ -38,9 +38,14 @@ class RestoController extends Controller
     {
         //TODO : Make relationship within resto and user 
         $validatedData = $request->validated();
-        $validatedData['image'] = $request->file('image')->store('resto-image','public');
-        
+        if($validatedData['image']) {
+            $validatedData['image'] = $request->file('image')->store('resto-image','public');
+            $data = Resto::create($validatedData);
+
+        }
+
         $data = Resto::create($validatedData);
+        
 
         return response($data);
 
@@ -57,7 +62,18 @@ class RestoController extends Controller
      */
     public function update(UpdateRestoRequest $request, Resto $resto)
     {
-        $resto->update($request->validated());
+        //TODO : Update Image
+        $validatedData = $request->validated();
+
+        if ($request->file('image') == null) {
+            $validatedData['image'] = "";
+        }else{
+            $validatedData['image'] = $resto->file('image')->store('resto-image','public');
+        }
+
+        
+
+        $resto->update($validatedData);
 
         return $resto->refresh();
     }
@@ -70,6 +86,8 @@ class RestoController extends Controller
      */
     public function destroy(Resto $resto)
     {
+
+
 
         $resto->delete();
 

@@ -38,6 +38,12 @@ class   UpdateRestoRequest extends FormRequest
                 'string',
                 'max:750'
             ],
+            'image' => [
+                'nullable',
+                'image',
+                'mimes:jpeg,png,jpg',
+                'max:2048'
+            ],
             'address' => [
                 'sometimes',
                 'required',
