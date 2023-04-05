@@ -2,12 +2,14 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\User;
 use App\Models\Resto;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Storage;
 use App\Http\Requests\StoreRestoRequest;
 use App\Http\Requests\UpdateRestoRequest;
-
 
 class RestoController extends Controller
 {
@@ -16,8 +18,6 @@ class RestoController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-
-
     public function index()
     {
         return Resto::latest()->get();
@@ -36,12 +36,15 @@ class RestoController extends Controller
      */
     public function store(StoreRestoRequest $request)
     {
-        
+        //TODO : Make relationship within resto and user 
         $validatedData = $request->validated();
         $validatedData['image'] = $request->file('image')->store('resto-image','public');
+        
         $data = Resto::create($validatedData);
 
         return response($data);
+
+        
       
     }
 
@@ -67,6 +70,7 @@ class RestoController extends Controller
      */
     public function destroy(Resto $resto)
     {
+
         $resto->delete();
 
         return $resto;
@@ -76,4 +80,8 @@ class RestoController extends Controller
     {
         return $resto->reviews->load('user');
     }
+
+
+
+    
 }

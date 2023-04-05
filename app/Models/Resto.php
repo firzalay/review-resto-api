@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Models\User;
 use App\Models\Review;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -11,12 +12,8 @@ class Resto extends Model
 {
     use HasFactory;
 
-    protected $fillable = [
-       
-        'name',
-        'image',
-        'address',
-        'description'
+    protected $guarded = [
+       'id'
     ];
 
      /**
@@ -27,5 +24,9 @@ class Resto extends Model
     public function reviews(): HasMany
     {
         return $this->hasMany(Review::class);
+    }
+
+    public function user() {
+        return $this->belongsTo(User::class);
     }
 }
